@@ -4,10 +4,17 @@ project(ZLEXER)
 set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB SOURCES
-     "src/*.cpp"
+     "import/*.cppm"
 )
 
-add_library(${PROJECT_NAME} ${SOURCES})
+add_library(${PROJECT_NAME})
+
+target_sources(${PROJECT_NAME}
+    PUBLIC
+        FILE_SET CXX_MODULES FILES
+            ${SOURCES}
+)
+
 target_include_directories(${PROJECT_NAME} PUBLIC include/)
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
