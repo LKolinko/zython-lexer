@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace lex {
-    enum type {STRING_LITER, INT_LITER, FLOAT_LITER, ID, KEYWORD, SEPARATOR, ENDLINE, OPERATOR, OTHER};
+    enum type {STRING_LITER, INT_LITER, FLOAT_LITER, ID, KEYWORD, SEPARATOR, ENDLINE, OPERATOR};
 }
 
 class lexem {

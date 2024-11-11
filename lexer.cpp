@@ -147,9 +147,9 @@ std::vector<lexem> Lexer::Scan() {
                 get_char();
             }
         } else {
-            std::string data = {tec_char_};
-            data_.emplace_back(lex::OTHER, data);
-            get_char();
+            std::string ans = "unresolved external character: ";
+            ans.push_back(tec_char_);
+            throw std::runtime_error(ans);
         }
     }
     return data_;
