@@ -1,0 +1,16 @@
+:
+
+while
+if
+
+continue
+break
+pass
+
+def
+mach
+case
+
+not
+or
+and
