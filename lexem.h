@@ -13,6 +13,6 @@ public:
     lex::type type_;
     std::string data_;
     void Print() {
-        std::cout << type_ << ' ' << data_ << ' ' << data_.size() << '\n';
+        std::cout << type_ << ' ' << data_  << '\n';
     }
 };

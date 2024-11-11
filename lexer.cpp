@@ -129,8 +129,7 @@ std::vector<lexem> Lexer::Scan() {
             operator_();
         } else if (tec_char_ == '"') {
             string_literal_();
-        }
-        if (is_separator_(tec_char_)) {
+        } else if (is_separator_(tec_char_)) {
             std::string data;
             while (tec_char_ == ' ' && !end_of_file_) {
                 data.push_back(tec_char_);
@@ -147,6 +146,10 @@ std::vector<lexem> Lexer::Scan() {
             while (tec_char_ == ' ' && !end_of_file_) {
                 get_char();
             }
+        } else {
+            std::string data = {tec_char_};
+            data_.emplace_back(lex::OTHER, data);
+            get_char();
         }
     }
     return data_;
