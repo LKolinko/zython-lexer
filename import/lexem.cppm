@@ -18,12 +18,13 @@ export namespace lex {
     };
 } // namespace lex
 
-export class lexem {
+export class Lexem {
 public:
-    lexem(lex::type type, const std::string& data) : type_(type), data_(data) {}
-    lex::type type_;
-    std::string data_;
+    Lexem(lex::type type, const std::string& data) : type_(type), data_(data) {}
     void Print() {
         std::cout << type_ << ' ' << data_  << '\n';
     }
+private:
+    lex::type type_;
+    std::string data_;
 };

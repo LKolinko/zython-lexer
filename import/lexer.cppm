@@ -16,33 +16,33 @@ public:
         in_.open(file_name);
     }
 
-    std::vector<lexem> Scan() {
-        get_char();
+    std::vector<Lexem> Scan() {
+        GetChar();
         while (!end_of_file_) {
-            if (is_letter_(tec_char_) || tec_char_ == ':') {
-                id_();
-            } else if (is_number_(tec_char_)) {
-                number_literal_();
-            } else if (is_operator_(tec_char_)) {
-                operator_();
+            if (IsLetter(tec_char_) || tec_char_ == ':') {
+                GetId();
+            } else if (IsNumber(tec_char_)) {
+                GetNumberLiteral();
+            } else if (IsOperator(tec_char_)) {
+                GetOperator();
             } else if (tec_char_ == '"') {
-                string_literal_();
-            } else if (is_separator_(tec_char_)) {
+                GetStringLiteral();
+            } else if (IsSeparator(tec_char_)) {
                 std::string data;
                 while (tec_char_ == ' ' && !end_of_file_) {
                     data.push_back(tec_char_);
-                    get_char();
+                    GetChar();
                 }
                 data_.emplace_back(lex::SEPARATOR, data);
-                if (is_separator_(tec_char_)) {
-                    get_char();
+                if (IsSeparator(tec_char_)) {
+                    GetChar();
                 }
             } else if (tec_char_ == '\n') {
                 std::string data = "\n";
                 data_.emplace_back(lex::ENDLINE, data);
-                get_char();
+                GetChar();
                 while (tec_char_ == ' ' && !end_of_file_) {
-                    get_char();
+                    GetChar();
                 }
             } else {
                 std::string ans = "unresolved external character: ";
@@ -54,86 +54,86 @@ public:
     }
 
 private:
-    void id_() {
+    void GetId() {
         std::string name;
         name.push_back(tec_char_);
-        get_char();
-        while (is_letter_or_number_(tec_char_) && !end_of_file_) {
+        GetChar();
+        while (IsLetterOrNumber(tec_char_) && !end_of_file_) {
             name.push_back(tec_char_);
-            get_char();
+            GetChar();
         }
-        if (bor_.find(name)) {
+        if (bor_.Find(name)) {
             data_.emplace_back(lex::KEYWORD, name);
         } else {
             data_.emplace_back(lex::ID, name);
         }
     }
-    void string_literal_() {
+    void GetStringLiteral() {
         std::string data;
-        get_char();
+        GetChar();
         while (tec_char_ != '"') {
             data.push_back(tec_char_);
-            get_char();
+            GetChar();
         }
-        get_char();
+        GetChar();
         data_.emplace_back(lex::STRING_LITER, data);
     }
-    void number_literal_() {
+    void GetNumberLiteral() {
         std::string data;
-        while (is_letter_or_number_(tec_char_) && !end_of_file_) {
+        while (IsLetterOrNumber(tec_char_) && !end_of_file_) {
             data.push_back(tec_char_);
-            get_char();
+            GetChar();
         }
         if (tec_char_ == '.') {
-            float_literal_(data);
+            GetFloatLiteral(data);
         } else {
             data_.emplace_back(lex::INT_LITER, data);
         }
     }
 
-    void float_literal_(std::string& data) {
+    void GetFloatLiteral(std::string& data) {
         data.push_back(tec_char_);
-        get_char();
-        while (is_letter_or_number_(tec_char_) && !end_of_file_) {
+        GetChar();
+        while (IsLetterOrNumber(tec_char_) && !end_of_file_) {
             data.push_back(tec_char_);
-            get_char();
+            GetChar();
         }
         data_.emplace_back(lex::FLOAT_LITER, data);
     }
-    void operator_() {
+    void GetOperator() {
         std::string data;
         data.push_back(tec_char_);
         if (tec_char_ == '+' && in_.peek() == '+') {
-            get_char();
+            GetChar();
             data.push_back(tec_char_);
         }
         if (tec_char_ == '-' && in_.peek() == '-') {
-            get_char();
+            GetChar();
             data.push_back(tec_char_);
         }
         if (tec_char_ == '*' && in_.peek() == '*') {
-            get_char();
+            GetChar();
             data.push_back(tec_char_);
         }
         if (tec_char_ == '=' && in_.peek() == '=') {
-            get_char();
+            GetChar();
             data.push_back(tec_char_);
         }
         if (tec_char_ == '/' && in_.peek() == '/') {
-            get_char();
-            comment_();
+            GetChar();
+            GetComment();
             return;
         }
-        get_char();
+        GetChar();
         data_.emplace_back(lex::OPERATOR, data);
     }
-    void comment_() {
+    void GetComment() {
         while (tec_char_ != '\n' && tec_char_ != EOF && !end_of_file_) {
-            get_char();
+            GetChar();
         }
     }
 
-    void get_char()  {
+    void GetChar()  {
         if (!in_.get(tec_char_)) {
             end_of_file_ = true;
         }
@@ -143,27 +143,27 @@ private:
     char tec_char_{};
     std::ifstream in_;
     Bor bor_;
-    std::vector<lexem> data_;
+    std::vector<Lexem> data_;
 
-    static bool is_operator_(char c) {
+    static bool IsOperator(char c) {
         return c == '+' || c == '-' || c == '*'
             || c == '/' || c == '%' || c == '>'
             || c == '<' || c == '=' || c == '!'
             || c == '(' || c == ')' || c == '.'
             || c == '[' || c == ']' || c == ',';
     }
-    static bool is_letter_(char c) {
+    static bool IsLetter(char c) {
         return (c >= 'a' && c <= 'z')
             || (c >= 'A' && c <= 'Z');
     }
-    static bool is_number_(char c) {
+    static bool IsNumber(char c) {
         return c >= '0' && c <= '9';
     }
 
-    static bool is_letter_or_number_(char c) {
-        return is_letter_(c) || is_number_(c);
+    static bool IsLetterOrNumber(char c) {
+        return IsLetter(c) || IsNumber(c);
     }
-    static bool is_separator_(char c) {
+    static bool IsSeparator(char c) {
         return c == ' ' || c == EOF;
     }
 };
