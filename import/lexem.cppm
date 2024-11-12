@@ -5,26 +5,25 @@ module;
 
 export module lexem;
 
-export namespace lex {
-    enum type {
-        STRING_LITER,
-        INT_LITER,
-        FLOAT_LITER,
-        ID,
-        KEYWORD,
-        SEPARATOR,
-        ENDLINE,
-        OPERATOR
-    };
-} // namespace lex
+export enum class Lex {
+    kStringLiter,
+    kIntLiter,
+    kFloatLiter,
+    kId,
+    kKeyworkd,
+    kSeparator,
+    kEndLine,
+    kOperator
+};
 
 export class Lexem {
 public:
-    Lexem(lex::type type, const std::string& data) : type_(type), data_(data) {}
+    Lexem(Lex type, std::string data) : type_(type), data_(std::move(data)) {}
+
     void Print() {
-        std::cout << type_ << ' ' << data_  << '\n';
+        std::cout << static_cast<std::underlying_type_t<Lex>>(type_) << ' ' << data_  << '\n';
     }
 private:
-    lex::type type_;
+    Lex type_;
     std::string data_;
 };
