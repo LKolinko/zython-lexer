@@ -13,11 +13,11 @@ public:
         std::ifstream in("token.txt");
         std::string token;
         while (in >> token) {
-            insert(token);
+            Insert(token);
         }
     }
 
-    bool find(const std::string &str) const {
+    bool Find(const std::string &str) const {
         if (str == ":") {
             return true;
         }
@@ -31,9 +31,9 @@ public:
             }
             tec_root = tec_root->alph[elem-'a'].get();
         }
-        return tec_root->term;
+        return tec_root->is_term;
     }
-    void insert(const std::string &str) {
+    void Insert(const std::string &str) {
         if (str == ":") {
             return;
         }
@@ -44,12 +44,12 @@ public:
             }
             tec_root = tec_root->alph[elem - 'a'].get();
         }
-        tec_root->term = true;
+        tec_root->is_term = true;
     }
 private:
     struct Node {
-        Node() : term(false) {}
-        bool term;
+        Node() : is_term(false) {}
+        bool is_term;
         std::array<std::unique_ptr<Node>, 26> alph;
     };
     std::unique_ptr<Node> root_;
