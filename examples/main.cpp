@@ -1,8 +1,9 @@
-#include "lexer.h"
+import lexer;
+#include <vector>
 
 int main() {
-    Lexer lexer("huy.txt");
-    auto result = lexer.Scan();
+    Lexer lexer("../../../huy.txt");
+    std::vector<lexem> result = lexer.Scan();
     for (auto& u : result) {
         u.Print();
     }    
