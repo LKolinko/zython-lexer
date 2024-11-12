@@ -5,7 +5,7 @@ module;
 
 export module lexem;
 
-enum class Lex {
+export enum class Lex {
     kStringLiter,
     kIntLiter,
     kFloatLiter,
@@ -16,7 +16,7 @@ enum class Lex {
     kOperator
 };
 
-class Lexem {
+export class Lexem {
 public:
     Lexem(Lex type, std::string data) : type_(type), data_(std::move(data)) {}
 
