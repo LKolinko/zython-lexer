@@ -9,6 +9,8 @@ export module bor;
 
 export class Bor {
 public:
+    static constexpr std::size_t kAlphabetSize = 26;
+
     Bor() : root_(std::make_unique<Node>()) {
         std::ifstream in("token.txt");
         std::string token;
@@ -50,7 +52,7 @@ private:
     struct Node {
         Node() : is_term(false) {}
         bool is_term;
-        std::array<std::unique_ptr<Node>, 26> alph;
+        std::array<std::unique_ptr<Node>, kAlphabetSize> alph;
     };
     std::unique_ptr<Node> root_;
 };

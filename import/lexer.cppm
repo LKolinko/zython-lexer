@@ -1,5 +1,6 @@
 module;
 
+#include <fstream>
 #include <vector>
 
 export module lexer;
@@ -33,13 +34,13 @@ public:
                     data.push_back(tec_char_);
                     GetChar();
                 }
-                data_.emplace_back(lex::SEPARATOR, data);
+                data_.emplace_back(Lex::kSeparator, data);
                 if (IsSeparator(tec_char_)) {
                     GetChar();
                 }
             } else if (tec_char_ == '\n') {
                 std::string data = "\n";
-                data_.emplace_back(lex::ENDLINE, data);
+                data_.emplace_back(Lex::kEndLine, data);
                 GetChar();
                 while (tec_char_ == ' ' && !end_of_file_) {
                     GetChar();
@@ -63,9 +64,9 @@ private:
             GetChar();
         }
         if (bor_.Find(name)) {
-            data_.emplace_back(lex::KEYWORD, name);
+            data_.emplace_back(Lex::kKeyworkd, name);
         } else {
-            data_.emplace_back(lex::ID, name);
+            data_.emplace_back(Lex::kId, name);
         }
     }
     void GetStringLiteral() {
@@ -76,7 +77,7 @@ private:
             GetChar();
         }
         GetChar();
-        data_.emplace_back(lex::STRING_LITER, data);
+        data_.emplace_back(Lex::kStringLiter, data);
     }
     void GetNumberLiteral() {
         std::string data;
@@ -87,7 +88,7 @@ private:
         if (tec_char_ == '.') {
             GetFloatLiteral(data);
         } else {
-            data_.emplace_back(lex::INT_LITER, data);
+            data_.emplace_back(Lex::kIntLiter, data);
         }
     }
 
@@ -98,7 +99,7 @@ private:
             data.push_back(tec_char_);
             GetChar();
         }
-        data_.emplace_back(lex::FLOAT_LITER, data);
+        data_.emplace_back(Lex::kFloatLiter, data);
     }
     void GetOperator() {
         std::string data;
@@ -125,10 +126,10 @@ private:
             return;
         }
         GetChar();
-        data_.emplace_back(lex::OPERATOR, data);
+        data_.emplace_back(Lex::kOperator, data);
     }
     void GetComment() {
-        while (tec_char_ != '\n' && tec_char_ != EOF && !end_of_file_) {
+        while (tec_char_ != '\n' && tec_char_ != std::ifstream::traits_type::eof() && !end_of_file_) {
             GetChar();
         }
     }
@@ -164,7 +165,7 @@ private:
         return IsLetter(c) || IsNumber(c);
     }
     static bool IsSeparator(char c) {
-        return c == ' ' || c == EOF;
+        return c == ' ' || c == std::ifstream::traits_type::eof();
     }
 };
 
