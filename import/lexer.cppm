@@ -90,7 +90,7 @@ private:
             GetChar();
         }
         GetChar();
-        data_.emplace_back(Lex::kStringLiter, data, line_, position_ - static_cast<int>(data.size()));
+        data_.emplace_back(Lex::kStringLiter, data, line_, position_ - static_cast<int>(data.size()) - 2);
     }
 
     void GetNumberLiteral() {

@@ -1,4 +1,4 @@
-12a
+""""
 def main():
     a = "sdjhjhs asdasd"
     a = 100
