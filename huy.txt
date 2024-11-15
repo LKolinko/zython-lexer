@@ -1,9 +1,9 @@
 def main():
-    a = "sdjhjhs asdasd"
+    a = "sdjhjhs asdasd""
     a = 100
     a = 100.100
     a = a.b
-    while (a + b >= c):
+    while (a++ +(1) == --c):
         # pinus
         if (cock // 12):
             break

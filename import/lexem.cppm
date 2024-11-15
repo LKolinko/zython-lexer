@@ -22,7 +22,7 @@ public:
     pos_(line, index) {}
 
     void Print() {
-        std::cout << static_cast<std::underlying_type_t<Lex>>(type_) << ' ' << pos_.line << ' ' << pos_.index << ' ' << data_  << '\n';
+        std::cout << static_cast<std::underlying_type_t<Lex>>(type_) << ' ' << pos_.line << ' ' << pos_.index << ' ' << data_ << '\n';
     }
     
     std::string GetData() const {

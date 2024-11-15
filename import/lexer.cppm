@@ -83,6 +83,9 @@ private:
         std::string data;
         GetChar();
         while (tec_char_ != '"') {
+            if (end_of_file_) {
+                throw std::runtime_error("string literal not closed");
+            }
             data.push_back(tec_char_);
             GetChar();
         }
