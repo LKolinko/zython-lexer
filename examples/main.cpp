@@ -3,7 +3,7 @@ import lexer;
 #include <vector>
 
 int main() {
-    Lexer lexer("../../../huy.txt");
+    Lexer lexer("../../../huy.txt", "../../../token.txt");
     std::vector<Lexem> result = lexer.Scan();
 
     for (auto& u : result) {

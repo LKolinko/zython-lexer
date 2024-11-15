@@ -13,7 +13,7 @@ export class Lexer {
 public:
     Lexer() = default;
 
-    Lexer(const std::string& file_name) : bor_(file_name) {
+    Lexer(const std::string& file_name, const std::string& token_file_name) : bor_(token_file_name) {
         in_.open(file_name);
     }
 
@@ -58,7 +58,7 @@ public:
 private:
 
     bool end_of_file_ = false;
-    int line_ = 1, position_ = 1;
+    uint64_t line_ = 1, position_ = 1;
     char tec_char_{};
     std::ifstream in_;
     Bor<bool> bor_;

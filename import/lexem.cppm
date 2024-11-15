@@ -19,10 +19,10 @@ export enum class Lex {
 export class Lexem {
 public:
     Lexem(Lex type, std::string data, int line, int index) : type_(type), data_(std::move(data)),
-    line_(line), index_(index) {}
+    pos_(line, index) {}
 
     void Print() {
-        std::cout << static_cast<std::underlying_type_t<Lex>>(type_) << ' ' << line_ << ' ' << index_ << ' ' << data_  << '\n';
+        std::cout << static_cast<std::underlying_type_t<Lex>>(type_) << ' ' << pos_.line << ' ' << pos_.index << ' ' << data_  << '\n';
     }
     
     std::string GetData() const {
@@ -33,12 +33,14 @@ public:
         return type_;
     }
 
-    std::pair<int32_t, int32_t> GetPosition() const {
-        return std::make_pair(line_, index_);
+    auto GetPosition() const {
+        return pos_;
     }
 
 private:
     Lex type_;
     std::string data_;
-    int32_t line_, index_;
+    struct {
+        uint64_t line, index;
+    } pos_;
 };
