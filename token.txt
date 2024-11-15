@@ -14,3 +14,6 @@ case
 not
 or
 and
+
+True
+False
