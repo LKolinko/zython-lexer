@@ -124,6 +124,18 @@ private:
             GetChar();
             data.push_back(tec_char_);
         }
+        if (tec_char_ == '<' && in_.peek() == '=') {
+            GetChar();
+            data.push_back(tec_char_);
+        }
+        if (tec_char_ == '>' && in_.peek() == '=') {
+            GetChar();
+            data.push_back(tec_char_);
+        }
+        if (tec_char_ == '!' && in_.peek() == '=') {
+            GetChar();
+            data.push_back(tec_char_);
+        }
         if (tec_char_ == '/' && in_.peek() == '/') {
             GetChar();
             data.push_back(tec_char_);
