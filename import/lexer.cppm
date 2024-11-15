@@ -95,7 +95,7 @@ private:
 
     void GetNumberLiteral() {
         std::string data;
-        while (IsLetterOrNumber(tec_char_) && !end_of_file_) {
+        while (IsNumber(tec_char_) && !end_of_file_) {
             data.push_back(tec_char_);
             GetChar();
         }
