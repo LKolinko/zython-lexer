@@ -13,7 +13,7 @@ export class Lexer {
 public:
     Lexer() = default;
 
-    Lexer(const std::string& file_name) {
+    Lexer(const std::string& file_name) : bor_(file_name) {
         in_.open(file_name);
     }
 
@@ -34,17 +34,18 @@ public:
                     data.push_back(tec_char_);
                     GetChar();
                 }
-                data_.emplace_back(Lex::kSeparator, data);
+                data_.emplace_back(Lex::kSeparator, data, line_, position_ - static_cast<int>(data.size()));
                 if (IsSeparator(tec_char_)) {
                     GetChar();
                 }
+            } else if (tec_char_ == '#') {
+                GetComment();
             } else if (tec_char_ == '\n') {
                 std::string data = "\n";
-                data_.emplace_back(Lex::kEndLine, data);
+                data_.emplace_back(Lex::kEndLine, data, line_, position_ - static_cast<int>(data.size()));
                 GetChar();
-                while (tec_char_ == ' ' && !end_of_file_) {
-                    GetChar();
-                }
+                position_ = 1;
+                ++line_;
             } else {
                 std::string ans = "unresolved external character: ";
                 ans.push_back(tec_char_);
@@ -55,6 +56,14 @@ public:
     }
 
 private:
+
+    bool end_of_file_ = false;
+    int line_ = 1, position_ = 1;
+    char tec_char_{};
+    std::ifstream in_;
+    Bor<bool> bor_;
+    std::vector<Lexem> data_;
+
     void GetId() {
         std::string name;
         name.push_back(tec_char_);
@@ -64,11 +73,12 @@ private:
             GetChar();
         }
         if (bor_.Find(name)) {
-            data_.emplace_back(Lex::kKeyworkd, name);
+            data_.emplace_back(Lex::kKeyworkd, name, line_, position_ - static_cast<int>(name.size()));
         } else {
-            data_.emplace_back(Lex::kId, name);
+            data_.emplace_back(Lex::kId, name, line_, position_ - static_cast<int>(name.size()));
         }
     }
+
     void GetStringLiteral() {
         std::string data;
         GetChar();
@@ -77,8 +87,9 @@ private:
             GetChar();
         }
         GetChar();
-        data_.emplace_back(Lex::kStringLiter, data);
+        data_.emplace_back(Lex::kStringLiter, data, line_, position_ - static_cast<int>(data.size()));
     }
+
     void GetNumberLiteral() {
         std::string data;
         while (IsLetterOrNumber(tec_char_) && !end_of_file_) {
@@ -88,7 +99,7 @@ private:
         if (tec_char_ == '.') {
             GetFloatLiteral(data);
         } else {
-            data_.emplace_back(Lex::kIntLiter, data);
+            data_.emplace_back(Lex::kIntLiter, data, line_, position_ - static_cast<int>(data.size()));
         }
     }
 
@@ -99,19 +110,12 @@ private:
             data.push_back(tec_char_);
             GetChar();
         }
-        data_.emplace_back(Lex::kFloatLiter, data);
+        data_.emplace_back(Lex::kFloatLiter, data, line_, position_ - static_cast<int>(data.size()));
     }
+
     void GetOperator() {
         std::string data;
         data.push_back(tec_char_);
-        if (tec_char_ == '+' && in_.peek() == '+') {
-            GetChar();
-            data.push_back(tec_char_);
-        }
-        if (tec_char_ == '-' && in_.peek() == '-') {
-            GetChar();
-            data.push_back(tec_char_);
-        }
         if (tec_char_ == '*' && in_.peek() == '*') {
             GetChar();
             data.push_back(tec_char_);
@@ -122,12 +126,12 @@ private:
         }
         if (tec_char_ == '/' && in_.peek() == '/') {
             GetChar();
-            GetComment();
-            return;
+            data.push_back(tec_char_);
         }
         GetChar();
-        data_.emplace_back(Lex::kOperator, data);
+        data_.emplace_back(Lex::kOperator, data, line_, position_ - static_cast<int>(data.size()));
     }
+
     void GetComment() {
         while (tec_char_ != '\n' && tec_char_ != std::ifstream::traits_type::eof() && !end_of_file_) {
             GetChar();
@@ -138,13 +142,8 @@ private:
         if (!in_.get(tec_char_)) {
             end_of_file_ = true;
         }
+        ++position_;
     }
-
-    bool end_of_file_ = false;
-    char tec_char_{};
-    std::ifstream in_;
-    Bor bor_;
-    std::vector<Lexem> data_;
 
     static bool IsOperator(char c) {
         return c == '+' || c == '-' || c == '*'
@@ -153,10 +152,12 @@ private:
             || c == '(' || c == ')' || c == '.'
             || c == '[' || c == ']' || c == ',';
     }
+
     static bool IsLetter(char c) {
         return (c >= 'a' && c <= 'z')
             || (c >= 'A' && c <= 'Z');
     }
+
     static bool IsNumber(char c) {
         return c >= '0' && c <= '9';
     }
@@ -164,8 +165,8 @@ private:
     static bool IsLetterOrNumber(char c) {
         return IsLetter(c) || IsNumber(c);
     }
+
     static bool IsSeparator(char c) {
         return c == ' ' || c == std::ifstream::traits_type::eof();
     }
 };
-

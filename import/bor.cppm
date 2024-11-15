@@ -1,18 +1,18 @@
 module;
 
-#include <array>
+#include <map>
 #include <memory>
 #include <string>
 #include <fstream>
 
 export module bor;
-
-export class Bor {
+export template<typename T>
+class Bor {
 public:
-    static constexpr std::size_t kAlphabetSize = 26;
+    Bor() : root_(std::make_unique<Node>()) {}
 
-    Bor() : root_(std::make_unique<Node>()) {
-        std::ifstream in("token.txt");
+    Bor(const std::string& file_name) : root_(std::make_unique<Node>()) {
+        std::ifstream in(file_name);
         std::string token;
         while (in >> token) {
             Insert(token);
@@ -20,39 +20,54 @@ public:
     }
 
     bool Find(const std::string &str) const {
-        if (str == ":") {
-            return true;
-        }
         Node *tec_root = root_.get();
         for (auto &elem : str) {
-            if (!(elem >= 'a' && elem <= 'z')) {
+            if (tec_root->alph.find(elem) == tec_root->alph.end()) {
                 return false;
             }
-            if (!tec_root->alph[elem - 'a']) {
-                return false;
-            }
-            tec_root = tec_root->alph[elem-'a'].get();
+            tec_root = tec_root->alph[elem].get();
         }
         return tec_root->is_term;
     }
-    void Insert(const std::string &str) {
-        if (str == ":") {
-            return;
-        }
+
+    T GetData(const std::string &str) const {
         Node *tec_root = root_.get();
         for (auto &elem : str) {
-            if (!tec_root->alph[elem - 'a'].get()) {
-                tec_root->alph[elem - 'a'] = std::make_unique<Node>();
+            tec_root = tec_root->alph[elem].get();
+        }
+        return tec_root->data_;
+    }
+
+    void Insert(const std::string &str, T data) {
+        Node *tec_root = root_.get();
+        for (auto &elem : str) {
+            if (tec_root->alph.find(elem) == tec_root->alph.end()) {
+                tec_root->alph[elem] = std::make_unique<Node>();
             }
-            tec_root = tec_root->alph[elem - 'a'].get();
+            tec_root = tec_root->alph[elem].get();
+        }
+        tec_root->is_term = true;
+        tec_root->data_ = data;
+    }
+
+    void Insert(const std::string &str) {
+        Node *tec_root = root_.get();
+        for (auto &elem : str) {
+            if (tec_root->alph.find(elem) == tec_root->alph.end()) {
+                tec_root->alph[elem] = std::make_unique<Node>();
+            }
+            tec_root = tec_root->alph[elem].get();
         }
         tec_root->is_term = true;
     }
+
 private:
     struct Node {
         Node() : is_term(false) {}
+        Node(T data) : is_term(false), data_(std::move(data)) {}
         bool is_term;
-        std::array<std::unique_ptr<Node>, kAlphabetSize> alph;
+        T data_;
+        std::map<char, std::unique_ptr<Node>> alph;
     };
     std::unique_ptr<Node> root_;
 };
