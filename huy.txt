@@ -1,6 +1,5 @@
-12a
 def main():
-    a = "sdjhjhs asdasd"
+    a = "sdjhjhs asdasd
     a = 100
     a = 100.100
     a = a.b

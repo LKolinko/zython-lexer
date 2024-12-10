@@ -30,7 +30,7 @@ public:
         return tec_root->is_term;
     }
 
-    T GetData(const std::string &str) const {
+    T& GetData(const std::string &str) const {
         Node *tec_root = root_.get();
         for (auto &elem : str) {
             tec_root = tec_root->alph[elem].get();
