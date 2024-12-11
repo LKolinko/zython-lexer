@@ -2,6 +2,7 @@ module;
 
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 export module lexer;
 
@@ -47,9 +48,12 @@ public:
                 position_ = 1;
                 ++line_;
             } else {
-                std::string ans = "unresolved external character: ";
-                ans.push_back(tec_char_);
-                throw std::runtime_error(ans);
+                if (tec_char_ != '\r') {
+                    std::string ans = "unresolved external character: ";
+                    ans.push_back(tec_char_);
+                    throw std::runtime_error(ans);
+                }
+                GetChar();
             }
         }
         return data_;
