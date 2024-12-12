@@ -56,6 +56,10 @@ public:
                 GetChar();
             }
         }
+        while (!data_.empty() && data_.back().GetType() == Lex::kEndLine) {
+          data_.pop_back();
+        }
+        data_.emplace_back(Lex::kEndLine, "\n", 0, 0);
         return data_;
     }
 
