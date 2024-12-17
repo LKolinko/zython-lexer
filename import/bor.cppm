@@ -6,6 +6,7 @@ module;
 #include <fstream>
 
 export module bor;
+
 export template<typename T>
 class Bor {
 public:
