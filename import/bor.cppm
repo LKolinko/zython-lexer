@@ -4,7 +4,6 @@ module;
 #include <memory>
 #include <string>
 #include <fstream>
-#include <iostream>
 
 export module bor;
 export template<typename T>
