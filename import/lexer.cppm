@@ -9,7 +9,9 @@ export module lexer;
 export import lexem;
 import bor;
 
-
+/*!
+ * Класс лексического анализатора
+ */
 export class Lexer {
 public:
     Lexer() = default;
@@ -18,6 +20,7 @@ public:
         in_.open(file_name);
     }
 
+    /// Функция для старта
     std::vector<Lexem> Scan() {
         GetChar();
         while (!end_of_file_) {
@@ -72,6 +75,7 @@ private:
     Bor<bool> bor_;
     std::vector<Lexem> data_;
 
+    /// получение лексемы id типа kId
     void GetId() {
         std::string name;
         name.push_back(tec_char_);
@@ -87,6 +91,7 @@ private:
         }
     }
 
+    /// получение лексемы строкогово литерала
     void GetStringLiteral() {
         std::string data;
         GetChar();
@@ -101,6 +106,7 @@ private:
         data_.emplace_back(Lex::kStringLiter, data, line_, position_ - static_cast<int>(data.size()));
     }
 
+    /// Получение лексемы численного литерала
     void GetNumberLiteral() {
         std::string data;
         while (IsNumber(tec_char_) && !end_of_file_) {
@@ -114,6 +120,7 @@ private:
         }
     }
 
+    /// Получение лексемы числа с плавающей точкой
     void GetFloatLiteral(std::string& data) {
         data.push_back(tec_char_);
         GetChar();
@@ -124,6 +131,7 @@ private:
         data_.emplace_back(Lex::kFloatLiter, data, line_, position_ - static_cast<int>(data.size()));
     }
 
+    /// Получение лексемы оператора
     void GetOperator() {
         std::string data;
         data.push_back(tec_char_);
@@ -155,12 +163,14 @@ private:
         data_.emplace_back(Lex::kOperator, data, line_, position_ - static_cast<int>(data.size()));
     }
 
+    /// Пропуск комментариев к коде
     void GetComment() {
         while (tec_char_ != '\n' && tec_char_ != std::ifstream::traits_type::eof() && !end_of_file_) {
             GetChar();
         }
     }
 
+    /// Получение следующего символа с проверкой на конец файла
     void GetChar()  {
         if (!in_.get(tec_char_)) {
             end_of_file_ = true;
@@ -168,6 +178,7 @@ private:
         ++position_;
     }
 
+    /// Проверка принадлежности символа к операторам
     static bool IsOperator(char c) {
         return c == '+' || c == '-' || c == '*'
             || c == '/' || c == '%' || c == '>'
@@ -176,11 +187,13 @@ private:
             || c == '[' || c == ']' || c == ',';
     }
 
+    /// Проверка принадлежности символа к буквам
     static bool IsLetter(char c) {
         return (c >= 'a' && c <= 'z')
             || (c >= 'A' && c <= 'Z');
     }
 
+    /// Проверка принадлежности символа к цифрам
     static bool IsNumber(char c) {
         return c >= '0' && c <= '9';
     }
@@ -189,6 +202,7 @@ private:
         return IsLetter(c) || IsNumber(c);
     }
 
+    /// Проверка принадлежности символа к разделителям
     static bool IsSeparator(char c) {
         return c == ' ' || c == std::ifstream::traits_type::eof();
     }

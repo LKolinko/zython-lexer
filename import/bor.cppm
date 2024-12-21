@@ -7,11 +7,15 @@ module;
 
 export module bor;
 
+/*!
+ *  Класс словаря, хранит шаблонную дату по ключу string
+ */
 export template<typename T>
 class Bor {
 public:
     Bor() : root_(std::make_unique<Node>()) {}
 
+    /// Создание с парсингом слов из файла (используется для ключевых слов)
     Bor(const std::string& file_name) : root_(std::make_unique<Node>()) {
         std::ifstream in(file_name);
         std::string token;
@@ -20,6 +24,7 @@ public:
         }
     }
 
+    /// поиск по бору
     bool Find(const std::string &str) const {
         Node *tec_root = root_.get();
         for (auto &elem : str) {
@@ -31,6 +36,7 @@ public:
         return tec_root->is_term;
     }
 
+    /// поиск по бору с возвратом даты
     T& GetData(const std::string &str) const {
         Node *tec_root = root_.get();
         for (auto &elem : str) {
@@ -39,6 +45,7 @@ public:
         return tec_root->data_;
     }
 
+    /// вставка в бор с датой
     void Insert(const std::string &str, T data) {
         Node *tec_root = root_.get();
         for (auto &elem : str) {
@@ -51,6 +58,7 @@ public:
         tec_root->data_ = data;
     }
 
+    /// вставка в бор без даты
     void Insert(const std::string &str) {
         Node *tec_root = root_.get();
         for (auto &elem : str) {
