@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.29)
 project(ZLEXER)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 
 file(GLOB SOURCES
      "import/*.cppm"
