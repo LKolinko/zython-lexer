@@ -23,6 +23,7 @@ export class Lexem {
 public:
     Lexem(Lex type, std::string data, int line, int index) : type_(type), data_(std::move(data)),
     pos_(line, index) {}
+    Lexem(Lex type, std::string data) : Lexem(type, data, 0, 0) {}
 
     void Print() {
         std::cout << static_cast<std::underlying_type_t<Lex>>(type_) << ' ' << (data_ == "\n" ? "Endl" : data_) << '\n';
